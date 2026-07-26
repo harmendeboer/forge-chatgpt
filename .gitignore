@@ -1,0 +1,14 @@
+# Lokale back-ups
+backups/
+
+# Lokaal OpenAI-logo
+assets/chatgpt.svg
+
+# Tijdelijke bestanden
+*.backup
+*.tmp
+*~
+
+# Editors
+.vscode/
+.idea/
