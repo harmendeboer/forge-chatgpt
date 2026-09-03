@@ -17,7 +17,7 @@ De versienummers volgen Semantic Versioning:
 - Betere automatische herkenning van Chromium-webapps
 - Mogelijkheid om een installatieverslag op te slaan
 
-## [0.3.0-dev] - 2026-09-03
+## [0.3.0-rc1] - 2026-09-03
 
 ### Toegevoegd
 
