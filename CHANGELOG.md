@@ -1,6 +1,6 @@
 # Changelog
 
-Alle belangrijke wijzigingen aan Forge ChatGPT Launcher worden in dit
+Alle belangrijke wijzigingen aan Forge ChatGPT Manager worden in dit
 bestand bijgehouden.
 
 De versienummers volgen Semantic Versioning:
@@ -13,10 +13,37 @@ De versienummers volgen Semantic Versioning:
 
 ### Gepland
 
-- Controlemodus met `./install.sh --check`
 - Uitgebreidere ondersteuning voor andere Linux-distributies
 - Betere automatische herkenning van Chromium-webapps
 - Mogelijkheid om een installatieverslag op te slaan
+
+## [0.3.0-dev] - 2026-09-03
+
+### Toegevoegd
+
+- Veilige managercommando's `--help`, `--check`, `--official` en `--pwa`
+- Controle van pakketversie, pakketarchitectuur, executable en desktop-launcher
+  van de officiële ChatGPT Linux-app
+- Controle van de door de officiële app gebundelde Codex CLI
+- Verwijzing naar de officiële downloadpagina wanneer pakket `chatgpt` ontbreekt
+- Bevestigingsvraag voordat de downloadpagina met `xdg-open` wordt geopend
+- Afzonderlijke scripts `scripts/install-official.sh` en
+  `scripts/install-pwa.sh`
+
+### Gewijzigd
+
+- `install.sh` is een kleine dispatcher die standaard alleen help toont
+- `VERSION` is de enige bron voor de getoonde manager-versie
+- De bestaande Chromium-PWA-installatie blijft beschikbaar als expliciete
+  fallback via `--pwa`
+- De PWA-installatie is idempotent wanneer Chromium en de PWA al bestaan
+
+### Veiligheid
+
+- Geen automatische installatie zonder expliciete modus
+- Geen tijdelijke download-URL of automatische installatie van downloads
+- De officiële ChatGPT-app en Chromium worden niet verwijderd
+- Er wordt geen dubbele handgemaakte `chatgpt.desktop`-launcher gemaakt
 
 ## [0.2.0] - 2026-07-27
 
