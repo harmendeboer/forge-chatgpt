@@ -21,7 +21,7 @@ if command -v codex >/dev/null 2>&1; then
 fi
 
 if [[ -x "$BUNDLED_CODEX" ]]; then
-    echo "Codex CLI gevonden in  ChatGPT Desktop:"
+    echo "Codex CLI gevonden in ChatGPT Desktop:"
     echo "$BUNDLED_CODEX"
     echo
 

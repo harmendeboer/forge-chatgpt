@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+
 CHATGPT_PACKAGE="chatgpt"
 BUNDLED_CODEX="/usr/lib/chatgpt/resources/codex"
 CHROMIUM_ID="org.chromium.Chromium"
@@ -72,7 +75,11 @@ echo
 
 echo "ChatGPT Desktop"
 
-if dpkg-query -W "$CHATGPT_PACKAGE" >/dev/null 2>&1; then
+PACKAGE_STATUS="$(
+    dpkg-query -W -f='${db:Status-Abbrev}' "$CHATGPT_PACKAGE" 2>/dev/null || true
+)"
+
+if [[ "$PACKAGE_STATUS" == ii* ]]; then
     CHATGPT_VERSION="$(
         dpkg-query -W -f='${Version}' "$CHATGPT_PACKAGE"
     )"
@@ -160,19 +167,19 @@ echo
 
 echo "Forge repository"
 
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    BRANCH="$(git branch --show-current)"
+if git -C "$PROJECT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    BRANCH="$(git -C "$PROJECT_DIR" branch --show-current)"
 
     print_item "Branch" "$BRANCH"
 
-    if [[ -z "$(git status --porcelain)" ]]; then
+    if [[ -z "$(git -C "$PROJECT_DIR" status --porcelain)" ]]; then
         print_item "Werkmap" "clean"
     else
         print_item "Werkmap" "wijzigingen aanwezig"
     fi
 
-    if git remote get-url origin >/dev/null 2>&1; then
-        print_item "GitHub remote" "$(git remote get-url origin)"
+    if git -C "$PROJECT_DIR" remote get-url origin >/dev/null 2>&1; then
+        print_item "GitHub remote" "$(git -C "$PROJECT_DIR" remote get-url origin)"
     else
         print_item "GitHub remote" "niet ingesteld"
     fi

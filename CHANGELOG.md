@@ -33,6 +33,7 @@ De versienummers volgen Semantic Versioning:
 - Afzonderlijke scripts `scripts/uninstall-official.sh` en
   `scripts/uninstall-pwa.sh`
 - Exacte bevestigingszinnen voor officiële-app- en PWA-verwijdering
+- Automatische Bash- en ShellCheck-controles via GitHub Actions
 
 ### Gewijzigd
 
@@ -45,6 +46,7 @@ De versienummers volgen Semantic Versioning:
 - Officiële verwijdering gebruikt `apt-get remove` voor uitsluitend pakket
   `chatgpt`
 - PWA-verwijdering loopt handmatig via Chromium-appbeheer
+- Repositorydiagnostiek werkt onafhankelijk van de huidige werkmap
 
 ### Veiligheid
 
