@@ -29,6 +29,10 @@ De versienummers volgen Semantic Versioning:
 - Bevestigingsvraag voordat de downloadpagina met `xdg-open` wordt geopend
 - Afzonderlijke scripts `scripts/install-official.sh` en
   `scripts/install-pwa.sh`
+- Veilige verwijderdispatcher met `--help`, `--check`, `--official` en `--pwa`
+- Afzonderlijke scripts `scripts/uninstall-official.sh` en
+  `scripts/uninstall-pwa.sh`
+- Exacte bevestigingszinnen voor officiële-app- en PWA-verwijdering
 
 ### Gewijzigd
 
@@ -37,13 +41,20 @@ De versienummers volgen Semantic Versioning:
 - De bestaande Chromium-PWA-installatie blijft beschikbaar als expliciete
   fallback via `--pwa`
 - De PWA-installatie is idempotent wanneer Chromium en de PWA al bestaan
+- `uninstall.sh` toont zonder argumenten alleen help en voert geen actie uit
+- Officiële verwijdering gebruikt `apt-get remove` voor uitsluitend pakket
+  `chatgpt`
+- PWA-verwijdering loopt handmatig via Chromium-appbeheer
 
 ### Veiligheid
 
 - Geen automatische installatie zonder expliciete modus
 - Geen tijdelijke download-URL of automatische installatie van downloads
-- De officiële ChatGPT-app en Chromium worden niet verwijderd
+- De installatiemodi verwijderen de officiële ChatGPT-app en Chromium niet
 - Er wordt geen dubbele handgemaakte `chatgpt.desktop`-launcher gemaakt
+- Chromium-profielen, persoonlijke configuratie en overige gebruikersdata
+  worden niet rechtstreeks verwijderd
+- Afwijkende of ontbrekende verwijderbevestigingen breken veilig af
 
 ## [0.2.0] - 2026-07-27
 

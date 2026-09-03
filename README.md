@@ -4,10 +4,10 @@ Forge ChatGPT Manager controleert de officiële ChatGPT Linux-app en beheert
 de bestaande Chromium-PWA als fallback op Linux Mint en andere Debian- of
 Ubuntu-gebaseerde Linux-distributies.
 
-De manager installeert standaard niets. Zonder argumenten toont `install.sh`
-alleen de helptekst.
+De manager installeert of verwijdert standaard niets. Zonder argumenten tonen
+`install.sh` en `uninstall.sh` alleen hun helptekst.
 
-## Commando's
+## Installatiecommando's
 
 ```bash
 ./install.sh
@@ -72,17 +72,45 @@ Chromium en maakt geen extra handgemaakte `chatgpt.desktop`-launcher.
 Chromium maakt daarna automatisch een eigen launcher, app-ID en
 taakbalkpictogram aan.
 
-## Verwijderen van de PWA
+## Veilige verwijdercommando's
 
-Het bestaande begeleide `uninstall.sh` is uitsluitend bedoeld voor de
-Chromium-webapp. Start het alleen wanneer die fallback werkelijk verwijderd
-moet worden:
+De verwijdermanager heeft dezelfde veilige dispatcheropzet als de installer:
 
 ```bash
 ./uninstall.sh
+./uninstall.sh --help
+./uninstall.sh --check
+./uninstall.sh --official
+./uninstall.sh --pwa
 ```
 
-Chromium zelf en de officiële ChatGPT Linux-app blijven behouden.
+- `./uninstall.sh` en `./uninstall.sh --help` tonen alleen uitleg.
+- `./uninstall.sh --check` voert de systeemcontrole uit zonder wijzigingen.
+- `./uninstall.sh --official` toont eerst de pakketgegevens en het exacte
+  `apt-get remove`-commando. Verwijdering kan alleen na de exacte bevestiging
+  `VERWIJDER CHATGPT`.
+- `./uninstall.sh --pwa` detecteert de echte Chromium-launcher. Alleen na de
+  exacte bevestiging `VERWIJDER PWA` wordt Chromium-appbeheer geopend, waarna
+  de gebruiker de PWA zelf verwijdert.
+
+De officiële modus verwijdert alleen pakket `chatgpt`, zonder persoonlijke
+configuratiemappen te verwijderen. Er wordt geen pakketpurge uitgevoerd. De
+PWA-modus verwijdert nooit rechtstreeks Chromium-profielen of launchers.
+
+De verwijdermanager verwijdert nooit automatisch:
+
+- Chromium;
+- ChatGPT-profielen, cookies, gesprekken of instellingen;
+- browserdata;
+- Codex-data, tokens of keyring-items;
+- andere gebruikersdata.
+
+Gebruik een verwijdermodus alleen wanneer de bijbehorende installatie werkelijk
+verwijderd moet worden. Zonder de exacte bevestiging wordt veilig afgebroken.
+
+Bij PWA-verwijdering blijven Chromium en de officiële ChatGPT Linux-app
+behouden. Bij verwijdering van het officiële pakket blijft de Chromium-PWA als
+fallback behouden.
 
 ## Projectstructuur
 
@@ -94,7 +122,9 @@ forge-chatgpt/
 │   ├── check-codex.sh
 │   ├── check-system.sh
 │   ├── install-official.sh
-│   └── install-pwa.sh
+│   ├── install-pwa.sh
+│   ├── uninstall-official.sh
+│   └── uninstall-pwa.sh
 ├── install.sh
 ├── uninstall.sh
 ├── VERSION
@@ -106,8 +136,8 @@ forge-chatgpt/
 
 ## Versie
 
-De actuele versie staat uitsluitend in `VERSION`; `install.sh` gebruikt dit
-bestand voor de getoonde manager-versie.
+De actuele versie staat uitsluitend in `VERSION`; `install.sh` en
+`uninstall.sh` gebruiken dit bestand voor de getoonde manager-versie.
 
 ## Disclaimer
 
