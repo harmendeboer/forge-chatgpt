@@ -2,91 +2,75 @@
 
 set -Eeuo pipefail
 
-CHROMIUM_ID="org.chromium.Chromium"
+PROJECT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+VERSION_FILE="$PROJECT_DIR/VERSION"
 
-APPLICATION_DIR="$HOME/.local/share/applications"
-LEGACY_LAUNCHER="$APPLICATION_DIR/chatgpt.desktop"
-LEGACY_ICON_DIR="$HOME/.local/share/icons/chatgpt"
+if [[ ! -r "$VERSION_FILE" ]]; then
+    echo "Fout: VERSION is niet leesbaar: $VERSION_FILE" >&2
+    exit 1
+fi
 
-trap 'echo; echo "Fout op regel $LINENO. Verwijderen is gestopt."; exit 1' ERR
+VERSION="$(<"$VERSION_FILE")"
 
-find_chatgpt_launcher() {
-    local launcher
+if [[ -z "$VERSION" ]]; then
+    echo "Fout: VERSION is leeg." >&2
+    exit 1
+fi
 
-    shopt -s nullglob
+show_help() {
+    cat <<EOF
+Forge ChatGPT Manager $VERSION
 
-    for launcher in "$APPLICATION_DIR"/org.chromium.Chromium*.desktop; do
-        if grep -Fqx 'Name=ChatGPT' "$launcher"; then
-            printf '%s\n' "$launcher"
-            shopt -u nullglob
-            return 0
-        fi
-    done
+Gebruik:
+  ./uninstall.sh [optie]
 
-    shopt -u nullglob
-    return 1
+Opties:
+  --help      Toon deze helptekst en verander niets.
+  --check     Controleer het systeem en de beschikbare installaties.
+  --official  Verwijder uitsluitend pakket chatgpt na exacte bevestiging.
+  --pwa       Open Chromium-appbeheer na exacte bevestiging voor handmatige verwijdering.
+
+Chromium wordt nooit automatisch verwijderd.
+Persoonlijke data, profielen en instellingen worden nooit automatisch verwijderd.
+EOF
 }
 
-echo "======================================"
-echo " Forge ChatGPT verwijderen"
-echo "======================================"
-echo
+run_script() {
+    local script_path="$1"
 
-CHATGPT_LAUNCHER="$(find_chatgpt_launcher || true)"
-
-if [[ -z "$CHATGPT_LAUNCHER" ]]; then
-    echo "Er is geen actieve ChatGPT-webapp gevonden."
-else
-    echo "Gevonden Chromium-launcher:"
-    echo "$CHATGPT_LAUNCHER"
-    echo
-    echo "Verwijder de app via Chromium:"
-    echo
-    echo "  Methode 1:"
-    echo "  Open ChatGPT, klik op de drie puntjes en kies"
-    echo "  'ChatGPT verwijderen' of 'App verwijderen'."
-    echo
-    echo "  Methode 2:"
-    echo "  Open in Chromium: chrome://apps"
-    echo "  Klik met rechts op ChatGPT en kies Verwijderen."
-    echo
-
-    nohup flatpak run "$CHROMIUM_ID" "chrome://apps/" \
-        >/tmp/forge-chatgpt-uninstall.log 2>&1 &
-
-    read -r -p "Druk op Enter nadat ChatGPT via Chromium is verwijderd..." _
-
-    for _ in 1 2 3 4 5; do
-        CHATGPT_LAUNCHER="$(find_chatgpt_launcher || true)"
-
-        if [[ -z "$CHATGPT_LAUNCHER" ]]; then
-            break
-        fi
-
-        sleep 1
-    done
-
-    if [[ -n "$CHATGPT_LAUNCHER" ]]; then
-        echo
-        echo "ChatGPT is nog steeds geregistreerd."
-        echo "Er worden geen Chromium-bestanden geforceerd verwijderd."
+    if [[ ! -x "$script_path" ]]; then
+        echo "Fout: script niet gevonden of niet uitvoerbaar:" >&2
+        echo "$script_path" >&2
         exit 1
     fi
+
+    exec "$script_path"
+}
+
+if (( $# > 1 )); then
+    echo "Fout: geef maximaal één optie op." >&2
+    echo >&2
+    show_help >&2
+    exit 2
 fi
 
-echo
-echo "Oude handgemaakte bestanden opruimen..."
-
-rm -f "$LEGACY_LAUNCHER"
-rm -rf "$LEGACY_ICON_DIR"
-
-if command -v update-desktop-database >/dev/null 2>&1; then
-    update-desktop-database "$APPLICATION_DIR"
-fi
-
-echo
-echo "======================================"
-echo " Verwijderen voltooid"
-echo "======================================"
-echo
-echo "Chromium zelf blijft geïnstalleerd."
+case "${1:-}" in
+    ""|--help)
+        show_help
+        ;;
+    --check)
+        run_script "$PROJECT_DIR/scripts/check-system.sh"
+        ;;
+    --official)
+        run_script "$PROJECT_DIR/scripts/uninstall-official.sh"
+        ;;
+    --pwa)
+        run_script "$PROJECT_DIR/scripts/uninstall-pwa.sh"
+        ;;
+    *)
+        echo "Fout: onbekende optie: $1" >&2
+        echo >&2
+        show_help >&2
+        exit 2
+        ;;
+esac

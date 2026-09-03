@@ -1,0 +1,43 @@
+name: Shell checks
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - feature/official-linux-app
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Check Bash syntax
+        shell: bash
+        run: |
+          bash -n install.sh
+          bash -n uninstall.sh
+          bash -n scripts/*.sh
+
+      - name: Run ShellCheck
+        shell: bash
+        run: shellcheck install.sh uninstall.sh scripts/*.sh
+
+      - name: Compare default and help output
+        shell: bash
+        run: |
+          diff -u <(./install.sh) <(./install.sh --help)
+          diff -u <(./uninstall.sh) <(./uninstall.sh --help)

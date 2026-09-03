@@ -1,6 +1,6 @@
 # Changelog
 
-Alle belangrijke wijzigingen aan Forge ChatGPT Launcher worden in dit
+Alle belangrijke wijzigingen aan Forge ChatGPT Manager worden in dit
 bestand bijgehouden.
 
 De versienummers volgen Semantic Versioning:
@@ -13,10 +13,50 @@ De versienummers volgen Semantic Versioning:
 
 ### Gepland
 
-- Controlemodus met `./install.sh --check`
 - Uitgebreidere ondersteuning voor andere Linux-distributies
 - Betere automatische herkenning van Chromium-webapps
 - Mogelijkheid om een installatieverslag op te slaan
+
+## [0.3.0-rc1] - 2026-09-03
+
+### Toegevoegd
+
+- Veilige managercommando's `--help`, `--check`, `--official` en `--pwa`
+- Controle van pakketversie, pakketarchitectuur, executable en desktop-launcher
+  van de officiële ChatGPT Linux-app
+- Controle van de door de officiële app gebundelde Codex CLI
+- Verwijzing naar de officiële downloadpagina wanneer pakket `chatgpt` ontbreekt
+- Bevestigingsvraag voordat de downloadpagina met `xdg-open` wordt geopend
+- Afzonderlijke scripts `scripts/install-official.sh` en
+  `scripts/install-pwa.sh`
+- Veilige verwijderdispatcher met `--help`, `--check`, `--official` en `--pwa`
+- Afzonderlijke scripts `scripts/uninstall-official.sh` en
+  `scripts/uninstall-pwa.sh`
+- Exacte bevestigingszinnen voor officiële-app- en PWA-verwijdering
+- Automatische Bash- en ShellCheck-controles via GitHub Actions
+
+### Gewijzigd
+
+- `install.sh` is een kleine dispatcher die standaard alleen help toont
+- `VERSION` is de enige bron voor de getoonde manager-versie
+- De bestaande Chromium-PWA-installatie blijft beschikbaar als expliciete
+  fallback via `--pwa`
+- De PWA-installatie is idempotent wanneer Chromium en de PWA al bestaan
+- `uninstall.sh` toont zonder argumenten alleen help en voert geen actie uit
+- Officiële verwijdering gebruikt `apt-get remove` voor uitsluitend pakket
+  `chatgpt`
+- PWA-verwijdering loopt handmatig via Chromium-appbeheer
+- Repositorydiagnostiek werkt onafhankelijk van de huidige werkmap
+
+### Veiligheid
+
+- Geen automatische installatie zonder expliciete modus
+- Geen tijdelijke download-URL of automatische installatie van downloads
+- De installatiemodi verwijderen de officiële ChatGPT-app en Chromium niet
+- Er wordt geen dubbele handgemaakte `chatgpt.desktop`-launcher gemaakt
+- Chromium-profielen, persoonlijke configuratie en overige gebruikersdata
+  worden niet rechtstreeks verwijderd
+- Afwijkende of ontbrekende verwijderbevestigingen breken veilig af
 
 ## [0.2.0] - 2026-07-27
 
