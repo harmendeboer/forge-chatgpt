@@ -6,6 +6,8 @@ APP_URL="https://chatgpt.com"
 CHROMIUM_ID="org.chromium.Chromium"
 
 PROJECT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CHECK_SCRIPT="$PROJECT_DIR/scripts/check-system.sh"
+
 APPLICATION_DIR="$HOME/.local/share/applications"
 BACKUP_DIR="$PROJECT_DIR/backups"
 LEGACY_LAUNCHER="$APPLICATION_DIR/chatgpt.desktop"
@@ -28,6 +30,28 @@ find_chatgpt_launcher() {
     shopt -u nullglob
     return 1
 }
+
+case "${1:-}" in
+    --check)
+        if [[ ! -x "$CHECK_SCRIPT" ]]; then
+            echo "Fout: controlescript niet gevonden of niet uitvoerbaar:"
+            echo "$CHECK_SCRIPT"
+            exit 1
+        fi
+
+        exec "$CHECK_SCRIPT"
+        ;;
+
+    "")
+        ;;
+
+    *)
+        echo "Gebruik:"
+        echo "  ./install.sh"
+        echo "  ./install.sh --check"
+        exit 2
+        ;;
+esac
 
 echo "======================================"
 echo " Forge ChatGPT Installer 0.2.0"
