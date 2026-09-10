@@ -17,6 +17,19 @@ De versienummers volgen Semantic Versioning:
 - Betere automatische herkenning van Chromium-webapps
 - Mogelijkheid om een installatieverslag op te slaan
 
+## [0.4.0-dev] - 2026-09-10
+
+### Toegevoegd
+
+- Nieuwe `local-ai.sh`-dispatcher voor de lokale AI-ontwikkellijn
+- Uitsluitend lezende hardwarecontrole via
+  `scripts/check-local-ai-hardware.sh`
+- Detectie van CPU, RAM, GPU, VRAM, opslag en Ollama
+
+### Veiligheid
+
+- Geen installatie of systeemwijzigingen door de Local AI-diagnose
+
 ## [0.3.0-rc1] - 2026-09-03
 
 ### Toegevoegd

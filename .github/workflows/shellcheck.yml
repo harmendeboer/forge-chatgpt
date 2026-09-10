@@ -8,6 +8,7 @@ on:
     branches:
       - main
       - feature/official-linux-app
+      - feature/local-ai-core
 
 permissions:
   contents: read
@@ -30,14 +31,20 @@ jobs:
         run: |
           bash -n install.sh
           bash -n uninstall.sh
+          bash -n local-ai.sh
           bash -n scripts/*.sh
 
       - name: Run ShellCheck
         shell: bash
-        run: shellcheck install.sh uninstall.sh scripts/*.sh
+        run: shellcheck install.sh uninstall.sh local-ai.sh scripts/*.sh
 
       - name: Compare default and help output
         shell: bash
         run: |
           diff -u <(./install.sh) <(./install.sh --help)
           diff -u <(./uninstall.sh) <(./uninstall.sh --help)
+          diff -u <(./local-ai.sh) <(./local-ai.sh --help)
+
+      - name: Run read-only Local AI check
+        shell: bash
+        run: ./local-ai.sh --check

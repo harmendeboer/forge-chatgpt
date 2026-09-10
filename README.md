@@ -7,6 +7,25 @@ Ubuntu-gebaseerde Linux-distributies.
 De manager installeert of verwijdert standaard niets. Zonder argumenten tonen
 `install.sh` en `uninstall.sh` alleen hun helptekst.
 
+## Forge Local AI 0.4.0-dev
+
+De eerste mijlpaal van Forge Local AI voert uitsluitend diagnose uit. De
+dispatcher leest zijn versie uit `VERSION` en biedt deze commando's:
+
+```bash
+./local-ai.sh --help
+./local-ai.sh --check
+```
+
+`./local-ai.sh --help` beschrijft de beschikbare read-only controle.
+`./local-ai.sh --check` inventariseert systeem-, CPU-, geheugen-, GPU-,
+VRAM-, opslag-, Ollama- en projectinformatie zonder iets te wijzigen.
+
+In deze ontwikkelversie worden nog geen Ollama-installatie, AI-modellen of
+services geïnstalleerd, gestart of aangepast. Modelkeuze en eventuele
+installatieadviezen volgen pas in een volgende mijlpaal na beoordeling van de
+diagnose-uitvoer.
+
 ## Installatiecommando's
 
 ```bash
@@ -120,12 +139,14 @@ forge-chatgpt/
 ├── backups/
 ├── scripts/
 │   ├── check-codex.sh
+│   ├── check-local-ai-hardware.sh
 │   ├── check-system.sh
 │   ├── install-official.sh
 │   ├── install-pwa.sh
 │   ├── uninstall-official.sh
 │   └── uninstall-pwa.sh
 ├── install.sh
+├── local-ai.sh
 ├── uninstall.sh
 ├── VERSION
 ├── README.md
